@@ -202,8 +202,8 @@ function gameIsOver() {
   }
 }
 function restart() {
+  Logs=[];
   gameOver = false;
-  console.log("hi");
   bomber1.lives = 1;
   bomber2.lives = 1;
   bomber1.walkLength = 1;
@@ -235,7 +235,7 @@ class Bombs {
     } else if (this.exploded === true) {
       image(bombLEFT, this.x - this.kaboom, this.y - 7, this.kaboom, 20); //left
       image(bombRIGHT, this.x, this.y - 7, this.kaboom, 20); //Right
-      image(bombUP, this.x - 7, this.y - 50, 20, this.kaboom); //up
+      image(bombUP, this.x - 7, this.y - this.kaboom, 20, this.kaboom); //up
       image(bombDOWN, this.x - 7, this.y, 20, this.kaboom); //down
     }
   }

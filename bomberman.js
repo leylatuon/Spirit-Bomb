@@ -44,8 +44,7 @@ class bomberman {
 
   moveDown() {
     if (
-      keyIsPressed === true &&
-      keyCode === DOWN_ARROW &&
+      keyIsDown(DOWN_ARROW) &&
       this.toggleDown === false &&
       this.y <= height
     ) {
@@ -62,8 +61,7 @@ class bomberman {
 
   moveLeft() {
     if (
-      keyIsPressed === true &&
-      keyCode === LEFT_ARROW &&
+      keyIsDown(LEFT_ARROW) &&
       this.toggleLeft === false &&
       this.x >= 0
     ) {
@@ -79,8 +77,7 @@ class bomberman {
   }
   moveRight() {
     if (
-      keyIsPressed === true &&
-      keyCode === RIGHT_ARROW &&
+      keyIsDown(RIGHT_ARROW) &&
       this.toggleRight === false &&
       this.x <= width
     ) {
