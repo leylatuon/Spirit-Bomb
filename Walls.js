@@ -24,7 +24,7 @@ class Log {
     this.y = y;
     this.size = blocksize;
     this.existance = true;
-    this.isPowerup = random([1, 2, 3, 4, 5, 6, 7]);
+    this.isPowerup = random([1, 2, 3]);
     this.gone = false;
   }
   showSelf() {
@@ -40,7 +40,7 @@ class Log {
   }
   showSpeedPowerup() {
     image(speedPowerUp, this.x + 7, this.y + 7, this.size - 15, this.size - 15);
-    console.log("pwoerup showed");
+    console.log("powerup showed");
     noFill();
   }
   showLifePowerup() {

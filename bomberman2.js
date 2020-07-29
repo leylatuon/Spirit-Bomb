@@ -97,8 +97,10 @@ class bomberman2 {
     }
   }
   collectSpeedPowerup() {
+    console.log(Logs);
     for (let i = 0; i < Logs.length; i++) {
       if (Logs[i].gone === true && Logs[i].isPowerup === 1) {
+        console.log('there is a speed powerup');
         let Poweruphit = collideRectRect(
           this.x,
           this.y,
@@ -106,33 +108,13 @@ class bomberman2 {
           this.size,
           Logs[i].x,
           Logs[i].y,
-          Logs[i].size - 20,
-          Logs[i].size - 20
+          Logs[i].size,
+          Logs[i].size
         );
         if (Poweruphit) {
-          logSound.play()
+          console.log("player 2 speed powerup hit");
+          logSound.play();
           this.walkLength += 0.5;
-          Logs.splice(i, 1);
-        }
-      }
-    }
-  }
-  collectLifePowerup() {
-    for (let i = 0; i < Logs.length; i++) {
-      if (Logs[i].gone === true && Logs[i].isPowerup === 2) {
-        let Poweruphit = collideRectRect(
-          this.x,
-          this.y,
-          this.size,
-          this.size,
-          Logs[i].x,
-          Logs[i].y,
-          Logs[i].size - 20,
-          Logs[i].size - 20
-        );
-        if (Poweruphit) {
-          logSound.play()
-          this.lives += 1;
           Logs.splice(i, 1);
         }
       }
@@ -141,6 +123,7 @@ class bomberman2 {
   collectBombPowerup() {
     for (let i = 0; i < Logs.length; i++) {
       if (Logs[i].gone === true && Logs[i].isPowerup === 3) {
+        console.log('there is a bomb powerup');
         let Poweruphit = collideRectRect(
           this.x,
           this.y,
@@ -148,12 +131,37 @@ class bomberman2 {
           this.size,
           Logs[i].x,
           Logs[i].y,
-          Logs[i].size - 20,
-          Logs[i].size - 20
+          Logs[i].size,
+          Logs[i].size 
         );
         if (Poweruphit) {
-          logSound.play()
+          logSound.play();
           this.explosionsize += 10;
+          Logs.splice(i, 1);
+          console.log("player 2 bomb powerup hit");
+        }
+      }
+    }
+  }
+
+  collectLifePowerup() {
+    for (let i = 0; i < Logs.length; i++) {
+      if (Logs[i].gone === true && Logs[i].isPowerup === 2) {
+        console.log('there is a life powerup');
+        let Poweruphit = collideRectRect(
+          this.x,
+          this.y,
+          this.size,
+          this.size,
+          Logs[i].x,
+          Logs[i].y,
+          Logs[i].size ,
+          Logs[i].size
+        );
+        if (Poweruphit) {
+          console.log("player 2 life powerup hit");
+          logSound.play();
+          this.lives += 1;
           Logs.splice(i, 1);
         }
       }
@@ -185,7 +193,7 @@ class bomberman2 {
         Walls[i].size
       );
       if (wallHit === true) {
-        console.log("true");
+        console.log("player 2 wall hit true");
         return true;
       }
     }
@@ -203,7 +211,7 @@ class bomberman2 {
         Logs[i].size
       );
       if (logHit === true) {
-        console.log("true");
+        console.log("player 2 log hit true");
         return true;
       }
     }

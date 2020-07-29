@@ -12,17 +12,17 @@ class bomberman {
     this.y = y;
     this.size = size;
     this.lives = 1;
-    this.won=false
+    this.won = false;
     this.walkLength = walkLength;
     this.toggleLeft = false;
     this.toggleRight = false;
     this.toggleUp = false;
     this.toggleDown = false;
-    this.explosionsize=blocksize
+    this.explosionsize = blocksize;
   }
 
   showSelf() {
-    image(player1Sprite, this.x, this.y, 32,32);
+    image(player1Sprite, this.x, this.y, 32, 32);
   }
 
   moveUp() {
@@ -97,9 +97,9 @@ class bomberman {
 
   placeBomb() {
     if (keyIsPressed === true && keyCode === 32 && Bomb1.length < 1) {
-      let newBomb = new Bombs(this.x + 20, this.y + 20,this.explosionsize);
+      let newBomb = new Bombs(this.x + 20, this.y + 20, this.explosionsize);
       Bomb1.push(newBomb);
-    
+
       setTimeout(function() {
         newBomb.explode();
       }, 3000);
@@ -118,18 +118,18 @@ class bomberman {
           this.size,
           Logs[i].x,
           Logs[i].y,
-          Logs[i].size - 20,
-          Logs[i].size - 20
+          Logs[i].size,
+          Logs[i].size,
         );
         if (Poweruphit) {
-          logSound.play()
+          logSound.play();
           this.walkLength += 0.5;
           Logs.splice(i, 1);
         }
       }
     }
   }
-   collectBombPowerup() {
+  collectBombPowerup() {
     for (let i = 0; i < Logs.length; i++) {
       if (Logs[i].gone === true && Logs[i].isPowerup === 3) {
         let Poweruphit = collideRectRect(
@@ -139,18 +139,18 @@ class bomberman {
           this.size,
           Logs[i].x,
           Logs[i].y,
-          Logs[i].size - 20,
-          Logs[i].size - 20
+          Logs[i].size,
+          Logs[i].size,
         );
         if (Poweruphit) {
-          logSound.play()
+          logSound.play();
           this.explosionsize += 10;
           Logs.splice(i, 1);
         }
       }
     }
   }
-  
+
   collectLifePowerup() {
     for (let i = 0; i < Logs.length; i++) {
       if (Logs[i].gone === true && Logs[i].isPowerup === 2) {
@@ -161,17 +161,18 @@ class bomberman {
           this.size,
           Logs[i].x,
           Logs[i].y,
-          Logs[i].size - 20,
-          Logs[i].size - 20
+          Logs[i].size,
+          Logs[i].size,
         );
         if (Poweruphit) {
-          logSound.play()
+          logSound.play();
           this.lives += 1;
           Logs.splice(i, 1);
         }
       }
     }
   }
+  
   checkWallCollison() {
     for (let i = 0; i < Walls.length; i++) {
       let wallHit = collideRectRect(
@@ -185,28 +186,27 @@ class bomberman {
         Walls[i].size
       );
       if (wallHit === true) {
-        console.log("true");
+        console.log("player 1 wall hit true");
         return true;
       }
     }
   }
   checkLogCollsion() {
     for (let i = 0; i < Logs.length; i++) {
-  
-        let logHit = collideRectRect(
-          this.x,
-          this.y,
-          this.size,
-          this.size,
-          Logs[i].x,
-          Logs[i].y,
-          Logs[i].size,
-          Logs[i].size
-        );
-        if (logHit === true) {
-          console.log("true");
-          return true;
-        }
+      let logHit = collideRectRect(
+        this.x,
+        this.y,
+        this.size,
+        this.size,
+        Logs[i].x,
+        Logs[i].y,
+        Logs[i].size,
+        Logs[i].size
+      );
+      if (logHit === true) {
+        console.log("player 1 log hit true");
+        return true;
       }
     }
   }
+}

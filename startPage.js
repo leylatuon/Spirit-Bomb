@@ -6,7 +6,7 @@
 
 // We'll use variables for most of our colors in this code-along.
 // BOMBERMAN GO BRRRRRRR :0 REEEEEEEEEE BABYYY
-let myButton, startScreen;
+let startButton, instructButton, startScreen;
 
 function checkStart() {
   if (startScreen === true) {
@@ -14,13 +14,20 @@ function checkStart() {
     textSize(32);
     fill(0, 102, 153);
     document.getElementById("myParagraph").innerHTML = "Bomb each other to win round. Player 1 is on top left corner use arrow keys to move and space to place bombs. Player 2 is on bottom right corner use ASDW to move and shift to place bombs. Have fun! ";
-    myButton.locate(200, 200);
-    myButton.text = "Start Game";
-    myButton.draw();
-     myButton.onPress = function() {
+    startButton.locate((width/2)-50, 200);
+    startButton.text = "Start Game";
+    startButton.draw();
+     startButton.onPress = function() {
     //When myButton is presse
     this.color = "#AAAAFF"; //Change button color
     startScreen = false;
+  };
+  
+    instructButton.locate((width/2)-50, 300);
+    instructButton.text = "Instructions";
+    instructButton.draw();
+    instructButton.onPress = function() {
+      this.color = "#AAAAFF"; 
   };
   }
 }

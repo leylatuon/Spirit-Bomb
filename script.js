@@ -105,18 +105,18 @@ function setup() {
     }
   }
   button = createButton("Restart");
-  button.position(970, 500);
+  button.position(3*windowWidth/4, 500);
   button.mousePressed(restart);
   console.log(Walls);
-  bomber1 = new bomberman(blocksize + 2, blocksize + 2, 35, 1);
+  bomber1 = new bomberman(blocksize + 2, blocksize + 2, 30, 1);
   bomber2 = new bomberman2(
     9 * blocksize + 2,
     9 * blocksize - blocksize + 2,
-    35,
+    30,
     1
   );
-  myButton = new Clickable(100, 50); //Create button
-
+  startButton = new Clickable(100, 50); //Create button
+instructButton = new Clickable(100, 50);
   startScreen = true;
 }
 function draw() {
@@ -139,6 +139,7 @@ function draw() {
       Logs[i].showSelf();
     }
     gameIsOver();
+    keepLives()
     bomber1.showSelf();
     bomber1.moveUp();
     bomber1.moveRight();
@@ -174,10 +175,10 @@ function draw() {
 
 function keepLives() {
   for (let i=0;i<bomber1.lives;i++){
-    image(player1Sprite,blocksize * 11+25, i*10,25,25)
+    image(player1Sprite,blocksize * 11+25, i*30+25,25,25)
   }
   for (let i=0;i<bomber2.lives;i++){
-    image(player2Sprite,blocksize * 11+25,  blocksize * 10-i*10,25,25)
+    image(player2Sprite, blocksize * 11+25,  450-i*30, 25, 25)
   }
 }
 
@@ -254,9 +255,9 @@ class Bombs {
       );
       let hitPlayer1 =
         collideLineRect(
-          this.x - this.kaboom,
+          this.x - this.kaboom+10,
           this.y,
-          this.x + this.kaboom,
+          this.x + this.kaboom-10,
           this.y,
           bomber1.x,
           bomber1.y,
@@ -265,9 +266,9 @@ class Bombs {
         ) ||
         collideLineRect(
           this.x,
-          this.y - this.kaboom,
+          this.y - this.kaboom+10,
           this.x,
-          this.y + this.kaboom,
+          this.y + this.kaboom-10,
           bomber1.x,
           bomber1.y,
           bomber1.size,
@@ -275,9 +276,9 @@ class Bombs {
         );
       let hitPlayer2 =
         collideLineRect(
-          this.x - this.kaboom,
+          this.x - this.kaboom+10,
           this.y,
-          this.x + this.kaboom,
+          this.x + this.kaboom-10,
           this.y,
           bomber2.x,
           bomber2.y,
@@ -286,9 +287,9 @@ class Bombs {
         ) ||
         collideLineRect(
           this.x,
-          this.y - this.kaboom,
+          this.y - this.kaboom+10,
           this.x,
-          this.y + this.kaboom,
+          this.y + this.kaboom-10,
           bomber2.x,
           bomber2.y,
           bomber2.size,
@@ -297,7 +298,7 @@ class Bombs {
       let hitRight = collideLineRect(
         this.x,
         this.y,
-        this.x + this.kaboom,
+        this.x + this.kaboom-10,
         this.y,
         Logs[i].x,
         Logs[i].y,
@@ -308,7 +309,7 @@ class Bombs {
         this.x,
         this.y,
         this.x,
-        this.y - this.kaboom,
+        this.y - this.kaboom+10,
         Logs[i].x,
         Logs[i].y,
         Logs[i].size,
@@ -318,7 +319,7 @@ class Bombs {
         this.x,
         this.y,
         this.x,
-        this.y + this.kaboom,
+        this.y + this.kaboom-10,
         Logs[i].x,
         Logs[i].y,
         Logs[i].size,
