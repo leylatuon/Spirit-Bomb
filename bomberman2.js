@@ -1,6 +1,6 @@
 // Name any p5.js functions we use in `global` so Glitch can recognize them.
 /* global
- *    HSB, background, color, colorMode, createCanvas, ellipse, fill, height, line, mouseX,Clickable,image
+ *    HSB, background, color, colorMode, createCanvas, ellipse, fill, height, line, mouseX,Clickable,image,keyIsDown
  *    mouseY, noStroke, stroke, text, width, windowWidth,windowHeight, square, circle, noFill,collideLineRect,keyCode,keyIsPressed,UP_ARROW,DOWN_ARROW,LEFT_ARROW,RIGHT_ARROW,rect,collideRectRect
  */
 
@@ -14,26 +14,25 @@ class bomberman2 {
     this.lives = 1;
     this.won = false;
     this.walkLength = walkLength;
+    this.actualwl = walkLength;
     this.toggleLeft = false;
     this.toggleRight = false;
     this.toggleUp = false;
     this.toggleDown = false;
     this.explosionsize = blocksize;
+    this.score=0
   }
 
   showSelf() {
-    fill(0, 70, 199);
-    image(player2Sprite, this.x, this.y, this.size, this.size);
+        if (this.lives === 0) {
+      image(player2SpriteDead, this.x, this.y, 32, 32);
+    } else {
+      image(player2Sprite, this.x, this.y, 32, 32);
+    }
   }
 
   moveUp() {
-    if (
-      //up arrow
-      keyIsPressed === true &&
-      this.toggleUp === false &&
-      keyCode === 87 &&
-      this.y >= 0
-    ) {
+    if (keyIsDown(87) && this.toggleUp === false && this.y >= 0 && !keyIsDown(65) && !keyIsDown(68) &&!keyIsDown(83)) {
       this.y -= this.walkLength;
       this.toggleRight = false;
       this.toggleDown = false;
@@ -45,11 +44,7 @@ class bomberman2 {
   }
 
   moveDown() {
-    if (
-      keyIsDown(83) &&
-      this.toggleDown === false &&
-      this.y <= height
-    ) {
+    if (keyIsDown(83) && this.toggleDown === false && this.y <= height && !keyIsDown(65) && !keyIsDown(68) &&!keyIsDown(87)) {
       this.toggleRight = false;
       this.toggleUp = false;
       this.toggleLeft = false;
@@ -62,27 +57,20 @@ class bomberman2 {
   }
 
   moveLeft() {
-    if (
-      keyIsDown(65) &&
-      this.toggleLeft === false &&
-      this.x >= 0
-    ) {
+    if (keyIsDown(65) && this.toggleLeft === false && this.x >= 0 && !keyIsDown(83) && !keyIsDown(68) &&!keyIsDown(87)) {
       this.toggleRight = false;
       this.toggleUp = false;
       this.toggleDown = false;
-      this.x -= this.walkLength;
+      this.x -= this.walkLength;3
       if (this.checkWallCollison() || this.checkLogCollsion()) {
         this.toggleLeft = true;
       }
       console.log(this.toggleRight, this.toggleUp, this.toggleDown);
     }
   }
+  
   moveRight() {
-    if (
-      keyIsDown(68) &&
-      this.toggleRight === false &&
-      this.x <= width
-    ) {
+    if (keyIsDown(68) && this.toggleRight === false && this.x <= width && !keyIsDown(65) && !keyIsDown(83) &&!keyIsDown(87)) {
       this.toggleLeft = false;
       this.toggleUp = false;
       this.toggleDown = false;
@@ -97,7 +85,7 @@ class bomberman2 {
     console.log(Logs);
     for (let i = 0; i < Logs.length; i++) {
       if (Logs[i].gone === true && Logs[i].isPowerup === 1) {
-        console.log('there is a speed powerup');
+        console.log("there is a speed powerup");
         let Poweruphit = collideRectRect(
           this.x,
           this.y,
@@ -113,6 +101,7 @@ class bomberman2 {
           logSound.play();
           this.walkLength += 0.5;
           Logs.splice(i, 1);
+          this.score++
         }
       }
     }
@@ -120,7 +109,7 @@ class bomberman2 {
   collectBombPowerup() {
     for (let i = 0; i < Logs.length; i++) {
       if (Logs[i].gone === true && Logs[i].isPowerup === 3) {
-        console.log('there is a bomb powerup');
+        console.log("there is a bomb powerup");
         let Poweruphit = collideRectRect(
           this.x,
           this.y,
@@ -129,13 +118,13 @@ class bomberman2 {
           Logs[i].x,
           Logs[i].y,
           Logs[i].size,
-          Logs[i].size 
+          Logs[i].size
         );
         if (Poweruphit) {
           logSound.play();
           this.explosionsize += 10;
           Logs.splice(i, 1);
-          console.log("player 2 bomb powerup hit");
+          this.score++
         }
       }
     }
@@ -144,7 +133,7 @@ class bomberman2 {
   collectLifePowerup() {
     for (let i = 0; i < Logs.length; i++) {
       if (Logs[i].gone === true && Logs[i].isPowerup === 2) {
-        console.log('there is a life powerup');
+        console.log("there is a life powerup");
         let Poweruphit = collideRectRect(
           this.x,
           this.y,
@@ -152,7 +141,7 @@ class bomberman2 {
           this.size,
           Logs[i].x,
           Logs[i].y,
-          Logs[i].size ,
+          Logs[i].size,
           Logs[i].size
         );
         if (Poweruphit) {
@@ -160,6 +149,7 @@ class bomberman2 {
           logSound.play();
           this.lives += 1;
           Logs.splice(i, 1);
+          this.score++
         }
       }
     }

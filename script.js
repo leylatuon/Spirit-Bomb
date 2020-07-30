@@ -35,22 +35,46 @@ let bombSound;
 let player1Sprite;
 let player2Sprite;
 let logImage;
-let wallImage;
+let wallImage, hitDelay;
 let speedPowerUp;
-let lifePowerUp,logSound
-let bombUP;
-let bombDOWN;
+let lifePowerUp,
+  logSound,
+  bgMusic,
+  player2SpriteDying,
+  player2SpriteDead,
+  bombPowerUp,
+  startscreenImage,
+  player1SpriteDying,
+  player1SpriteDead,
+  bombUP,
+  bombDOWN;
 let bombRIGHT;
 let bombLEFT;
+let dyingSound;
 function preload() {
+  startscreenImage = loadImage(
+    "https://cdn.glitch.com/d649cbbc-e1ae-4e01-8436-8f08bba45c16%2FUntitled%20presentation%20(2).jpg?v=1596135612160"
+  );
   bombImage = loadImage(
     "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2Fhiclipart.com.png?v=1595972033552"
   );
   bombSound = loadSound(
     "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2FExplosion%2B7.mp3?v=1596033257948"
   );
+  player1SpriteDying = loadImage(
+    "https://cdn.glitch.com/d649cbbc-e1ae-4e01-8436-8f08bba45c16%2FUntitled_Artwork%202.png?v=1596128029652"
+  );
+  player1SpriteDead = loadImage(
+    "https://cdn.glitch.com/d649cbbc-e1ae-4e01-8436-8f08bba45c16%2FUntitled_Artwork%203.png?v=1596128031097"
+  );
   player1Sprite = loadImage(
     "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2Fc6ca087f-b424-487a-b793-17fa8fe655b2_Untitled_Artwork.png?v=1596039529910"
+  );
+  player2SpriteDying = loadImage(
+    "https://cdn.glitch.com/d649cbbc-e1ae-4e01-8436-8f08bba45c16%2Fd649cbbc-e1ae-4e01-8436-8f08bba45c16_Player2Dying.png?v=1596127321609"
+  );
+  player2SpriteDead = loadImage(
+    "https://cdn.glitch.com/d649cbbc-e1ae-4e01-8436-8f08bba45c16%2Fd649cbbc-e1ae-4e01-8436-8f08bba45c16_Player2Dead2.png?v=1596127357461"
   );
   player2Sprite = loadImage(
     "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2Fc6ca087f-b424-487a-b793-17fa8fe655b2_Untitled_Artwork%203.png?v=1596039592004"
@@ -85,14 +109,15 @@ function preload() {
   bombLEFT = loadImage(
     "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2Fc6ca087f-b424-487a-b793-17fa8fe655b2_leftLine%20(1).png?v=1596041882575"
   );
+  dyingSound = loadSound(
+    "https://cdn.glitch.com/d649cbbc-e1ae-4e01-8436-8f08bba45c16%2FToxic%20Goo-SoundBible.com-392739082.mp3?v=1596125786427"
+  );
 }
 function setup() {
+  hitDelay = 0;
   Score = 0;
-  var cnv = createCanvas(blocksize * 11+50, blocksize * 10);
-  var x = (windowWidth - width) / 2;
-  var y = (windowHeight - height) / 2 + 30;
-
-  cnv.position(x, y);
+  var cnv = createCanvas(blocksize * 11 + 90, blocksize * 10);
+  cnv.parent("theGame");
 
   for (let j = 0; j < board.length; j++) {
     for (let i = 0; i < board[j].length; i++) {
@@ -104,8 +129,13 @@ function setup() {
       }
     }
   }
+  //start page button 
+  button1 = createButton("Start Page");
+  button1.position(900, 675);
+  button1.mousePressed(goStartScreen);
+  //restart button
   button = createButton("Restart");
-  button.position(3*windowWidth/4, 500);
+  button.position(990, 675);
   button.mousePressed(restart);
   console.log(Walls);
   bomber1 = new bomberman(blocksize + 2, blocksize + 2, 30, 1);
@@ -116,14 +146,13 @@ function setup() {
     1
   );
   startButton = new Clickable(100, 50); //Create button
-instructButton = new Clickable(100, 50);
+  instructButton = new Clickable(100, 50);
   startScreen = true;
 }
 function draw() {
   //shows Walls
   checkStart();
   if (startScreen == false) {
-    document.getElementById("myParagraph").innerHTML = "";
     background(133, 164, 140);
     stroke(0);
     strokeWeight(1);
@@ -139,7 +168,7 @@ function draw() {
       Logs[i].showSelf();
     }
     gameIsOver();
-    keepLives()
+    keepLives();
     bomber1.showSelf();
     bomber1.moveUp();
     bomber1.moveRight();
@@ -171,15 +200,18 @@ function draw() {
   if (gameOver === false) {
     document.getElementById("GameOver").innerHTML = "";
   }
+  hitDelay--;
 }
 
 function keepLives() {
-  for (let i=0;i<bomber1.lives;i++){
-    image(player1Sprite,blocksize * 11+25, i*30+25,25,25)
+  for (let i = 0; i < bomber1.lives; i++) {
+    image(player1Sprite, blocksize * 11 + 25, i * 30 + 25, 25, 25);
   }
-  for (let i=0;i<bomber2.lives;i++){
-    image(player2Sprite, blocksize * 11+25,  450-i*30, 25, 25)
+  for (let i = 0; i < bomber2.lives; i++) {
+    image(player2Sprite, blocksize * 11 + 25, 450 - i * 30, 25, 25);
   }
+//  text("Player 1 Score is: ", width-20, 20, 50, 50);
+//  text("Player 2 Score is: ", width-20, 300, 50, 50);
 }
 
 function gameIsOver() {
@@ -202,7 +234,7 @@ function gameIsOver() {
   }
 }
 function restart() {
-  Logs=[];
+  Logs = [];
   gameOver = false;
   bomber1.lives = 1;
   bomber2.lives = 1;
@@ -222,6 +254,11 @@ function restart() {
     }
   }
 }
+
+function goStartScreen(){
+  startScreen=true;  
+}
+
 class Bombs {
   constructor(x, y, size) {
     this.x = x;
@@ -255,9 +292,9 @@ class Bombs {
       );
       let hitPlayer1 =
         collideLineRect(
-          this.x - this.kaboom+10,
+          this.x - this.kaboom + 10,
           this.y,
-          this.x + this.kaboom-10,
+          this.x + this.kaboom - 10,
           this.y,
           bomber1.x,
           bomber1.y,
@@ -266,9 +303,9 @@ class Bombs {
         ) ||
         collideLineRect(
           this.x,
-          this.y - this.kaboom+10,
+          this.y - this.kaboom + 10,
           this.x,
-          this.y + this.kaboom-10,
+          this.y + this.kaboom - 10,
           bomber1.x,
           bomber1.y,
           bomber1.size,
@@ -276,9 +313,9 @@ class Bombs {
         );
       let hitPlayer2 =
         collideLineRect(
-          this.x - this.kaboom+10,
+          this.x - this.kaboom + 10,
           this.y,
-          this.x + this.kaboom-10,
+          this.x + this.kaboom - 10,
           this.y,
           bomber2.x,
           bomber2.y,
@@ -287,9 +324,9 @@ class Bombs {
         ) ||
         collideLineRect(
           this.x,
-          this.y - this.kaboom+10,
+          this.y - this.kaboom + 10,
           this.x,
-          this.y + this.kaboom-10,
+          this.y + this.kaboom - 10,
           bomber2.x,
           bomber2.y,
           bomber2.size,
@@ -298,7 +335,7 @@ class Bombs {
       let hitRight = collideLineRect(
         this.x,
         this.y,
-        this.x + this.kaboom-10,
+        this.x + this.kaboom - 10,
         this.y,
         Logs[i].x,
         Logs[i].y,
@@ -309,7 +346,7 @@ class Bombs {
         this.x,
         this.y,
         this.x,
-        this.y - this.kaboom+10,
+        this.y - this.kaboom + 10,
         Logs[i].x,
         Logs[i].y,
         Logs[i].size,
@@ -319,7 +356,7 @@ class Bombs {
         this.x,
         this.y,
         this.x,
-        this.y + this.kaboom-10,
+        this.y + this.kaboom - 10,
         Logs[i].x,
         Logs[i].y,
         Logs[i].size,
@@ -374,15 +411,19 @@ class Bombs {
           Logs.splice(i, 1);
         }
       }
-      if (hitPlayer1) {
+      if (hitPlayer1 && hitDelay <= 0) {
         bomber1.lives--;
+        hitDelay = 50;
         if (bomber1.lives === 0) {
+          dyingSound.play();
           bomber2.won = true;
         }
       }
-      if (hitPlayer2) {
+      if (hitPlayer2 && hitDelay <= 0) {
         bomber2.lives--;
+        hitDelay = 50;
         if (bomber2.lives === 0) {
+          dyingSound.play();
           bomber1.won = true;
         }
       }

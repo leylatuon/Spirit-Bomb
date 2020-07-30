@@ -19,10 +19,15 @@ class bomberman {
     this.toggleUp = false;
     this.toggleDown = false;
     this.explosionsize = blocksize;
+    this.score = 0;
   }
 
   showSelf() {
-    image(player1Sprite, this.x, this.y, 32, 32);
+    if (this.lives === 0) {
+      image(player1SpriteDead, this.x, this.y, 32, 32);
+    } else {
+      image(player1Sprite, this.x, this.y, 32, 32);
+    }
   }
 
   moveUp() {
@@ -30,7 +35,10 @@ class bomberman {
       keyIsPressed === true &&
       this.toggleUp === false &&
       keyCode === UP_ARROW &&
-      this.y >= 0
+      this.y >= 0 &&
+      !keyIsDown(RIGHT_ARROW) &&
+      !keyIsDown(LEFT_ARROW) &&
+      !keyIsDown(DOWN_ARROW)
     ) {
       this.y -= this.walkLength;
       this.toggleRight = false;
@@ -46,7 +54,10 @@ class bomberman {
     if (
       keyIsDown(DOWN_ARROW) &&
       this.toggleDown === false &&
-      this.y <= height
+      this.y <= height &&
+      !keyIsDown(RIGHT_ARROW) &&
+      !keyIsDown(UP_ARROW) &&
+      !keyIsDown(LEFT_ARROW)
     ) {
       this.toggleRight = false;
       this.toggleUp = false;
@@ -63,7 +74,10 @@ class bomberman {
     if (
       keyIsDown(LEFT_ARROW) &&
       this.toggleLeft === false &&
-      this.x >= 0
+      this.x >= 0 &&
+      !keyIsDown(RIGHT_ARROW) &&
+      !keyIsDown(UP_ARROW) &&
+      !keyIsDown(DOWN_ARROW)
     ) {
       this.toggleRight = false;
       this.toggleUp = false;
@@ -79,7 +93,10 @@ class bomberman {
     if (
       keyIsDown(RIGHT_ARROW) &&
       this.toggleRight === false &&
-      this.x <= width
+      this.x <= width &&
+      !keyIsDown(LEFT_ARROW) &&
+      !keyIsDown(UP_ARROW) &&
+      !keyIsDown(DOWN_ARROW)
     ) {
       this.toggleLeft = false;
       this.toggleUp = false;
@@ -116,12 +133,13 @@ class bomberman {
           Logs[i].x,
           Logs[i].y,
           Logs[i].size,
-          Logs[i].size,
+          Logs[i].size
         );
         if (Poweruphit) {
           logSound.play();
           this.walkLength += 0.5;
           Logs.splice(i, 1);
+          this.score++;
         }
       }
     }
@@ -137,12 +155,13 @@ class bomberman {
           Logs[i].x,
           Logs[i].y,
           Logs[i].size,
-          Logs[i].size,
+          Logs[i].size
         );
         if (Poweruphit) {
           logSound.play();
           this.explosionsize += 10;
           Logs.splice(i, 1);
+          this.score++;
         }
       }
     }
@@ -159,17 +178,18 @@ class bomberman {
           Logs[i].x,
           Logs[i].y,
           Logs[i].size,
-          Logs[i].size,
+          Logs[i].size
         );
         if (Poweruphit) {
           logSound.play();
           this.lives += 1;
           Logs.splice(i, 1);
+          this.score++;
         }
       }
     }
   }
-  
+
   checkWallCollison() {
     for (let i = 0; i < Walls.length; i++) {
       let wallHit = collideRectRect(

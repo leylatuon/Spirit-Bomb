@@ -3,10 +3,33 @@
 body {
   font-family: helvetica, arial, sans-serif;
   margin: 2em;
-  background-color: RGB(133,164,140)}
+  background-color: RGB(133,164,140);
+}
+h2 {
+  font-family: "Righteous";
+  color: #475b63;
+  display: block;
+  font-size: 1.3em;
+  margin-top: 0.53em;
+  margin-bottom: 0.0em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
 }
 
+#MainContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content:  space-evenly;
+    
+}
 
+#verticalContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content:  space-evenly;
+  align-items:center;
+}
 
 #GameOver{
 display: flex;
@@ -15,16 +38,40 @@ display: flex;
   align-items: center;
   text-align: center;
 }
-#myParagraph {
-  margin: auto;
-  margin-top: 0 px;
-  position: relative;
-  width: 500 px;
-  height: 200 px;
-  color: #333;
-  text-align: center;
+
+#instruct1 {
+  font-family: "Nunito";
+  font-size: 18px;
+  margin-top: 0px;
+  width: 400px;
+  height: 100%;
+  border: 1px solid;
+  color: #475b63;
+  text-align : left;
+  padding : 0.1em;
+  
+}
+
+table, th, td
+{
+  font-family: "Nunito";
+  color: #475b63;
+  border: 1px solid ;
+  padding:0px;
 }
 
 canvas {
-  position: relative !important;
+ position: relative !important;
+
+}
+
+img {
+  width:100px;
+}
+th.photo {
+  width: 100px;
+}
+
+th.explain {
+  width: 300px;
 }
