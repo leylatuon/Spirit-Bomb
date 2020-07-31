@@ -24,7 +24,7 @@ class Log {
     this.y = y;
     this.size = blocksize;
     this.existance = true;
-    this.isPowerup = random([1,2,2,4,5,6]);
+    this.isPowerup = random([1,2,3,4,5,6]);
     this.gone = false;
   }
   showSelf() {

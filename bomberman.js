@@ -202,7 +202,6 @@ class bomberman {
         Walls[i].size
       );
       if (wallHit === true) {
-        console.log("player 1 wall hit true");
         return true;
       }
     }
@@ -220,7 +219,6 @@ class bomberman {
         Logs[i].size
       );
       if (logHit === true) {
-        console.log("player 1 log hit true");
         return true;
       }
     }

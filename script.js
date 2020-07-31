@@ -58,7 +58,7 @@ let bombLEFT;
 let dyingSound;
 
 function setup() {
-  bgmusic.setVolume(0.2);
+  bgmusic.setVolume(0.5);
   bgmusic.loop();
   color1 = "Red";
   color2 = "Blue";
