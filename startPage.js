@@ -13,21 +13,23 @@ function checkStart() {
     background(startscreenImage);
     textSize(32);
     fill(0, 102, 153);
-    startButton.locate((width/2)-52, 310);
+    startButton.locate(width / 2 - 52, 310);
+    startButton.textFont = "Righteous";
     startButton.text = "Start Game";
     startButton.draw();
-     startButton.onPress = function() {
-    //When myButton is presse
-     //Change button color
-    startScreen = false;
-  };
-  
-    instructButton.locate((width/2)-52, 410);
-    instructButton.text = "Shop";
+    
+    startButton.onPress = function() {
+      startShop = true;
+      startScreen = false;
+    };
+
+    instructButton.locate(width / 2 - 52, 410);
+    instructButton.textFont = "Righteous";
+    instructButton.text = "Credits";
     instructButton.draw();
     instructButton.onPress = function() {
-
-  };
+      startCredits = true;
+      startScreen = false;
+    };
   }
 }
-

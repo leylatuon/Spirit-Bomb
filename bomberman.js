@@ -32,9 +32,8 @@ class bomberman {
 
   moveUp() {
     if (
-      keyIsPressed === true &&
+      keyIsDown(UP_ARROW ) &&
       this.toggleUp === false &&
-      keyCode === UP_ARROW &&
       this.y >= 0 &&
       !keyIsDown(RIGHT_ARROW) &&
       !keyIsDown(LEFT_ARROW) &&

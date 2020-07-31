@@ -18,7 +18,7 @@ let board = [
   [1, 2, 0, 1, 1, 2, 0, 2, 0, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
-
+let startCredits;
 let button;
 let gameOver = false;
 let Walls = [];
@@ -44,76 +44,24 @@ let lifePowerUp,
   player2SpriteDead,
   bombPowerUp,
   startscreenImage,
-  player1SpriteDying,
+  player1priteDying,
   player1SpriteDead,
   bombUP,
+  startShop,
+  color1,
+  color2,
+  PurpleSprite,
+  PurpleSpriteDead,
   bombDOWN;
 let bombRIGHT;
 let bombLEFT;
 let dyingSound;
-function preload() {
-  startscreenImage = loadImage(
-    "https://cdn.glitch.com/d649cbbc-e1ae-4e01-8436-8f08bba45c16%2FUntitled%20presentation%20(2).jpg?v=1596135612160"
-  );
-  bombImage = loadImage(
-    "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2Fhiclipart.com.png?v=1595972033552"
-  );
-  bombSound = loadSound(
-    "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2FExplosion%2B7.mp3?v=1596033257948"
-  );
-  player1SpriteDying = loadImage(
-    "https://cdn.glitch.com/d649cbbc-e1ae-4e01-8436-8f08bba45c16%2FUntitled_Artwork%202.png?v=1596128029652"
-  );
-  player1SpriteDead = loadImage(
-    "https://cdn.glitch.com/d649cbbc-e1ae-4e01-8436-8f08bba45c16%2FUntitled_Artwork%203.png?v=1596128031097"
-  );
-  player1Sprite = loadImage(
-    "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2Fc6ca087f-b424-487a-b793-17fa8fe655b2_Untitled_Artwork.png?v=1596039529910"
-  );
-  player2SpriteDying = loadImage(
-    "https://cdn.glitch.com/d649cbbc-e1ae-4e01-8436-8f08bba45c16%2Fd649cbbc-e1ae-4e01-8436-8f08bba45c16_Player2Dying.png?v=1596127321609"
-  );
-  player2SpriteDead = loadImage(
-    "https://cdn.glitch.com/d649cbbc-e1ae-4e01-8436-8f08bba45c16%2Fd649cbbc-e1ae-4e01-8436-8f08bba45c16_Player2Dead2.png?v=1596127357461"
-  );
-  player2Sprite = loadImage(
-    "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2Fc6ca087f-b424-487a-b793-17fa8fe655b2_Untitled_Artwork%203.png?v=1596039592004"
-  );
-  logImage = loadImage(
-    "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2FUntitled_Artwork%204.png?v=1596039538517"
-  );
-  logSound = loadSound(
-    "https://cdn.glitch.com/d649cbbc-e1ae-4e01-8436-8f08bba45c16%2Fding-sound-effect_2.mp3?v=1596044617153"
-  );
-  wallImage = loadImage(
-    "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2FUntitled_Artwork%205.png?v=1596039686097"
-  );
-  speedPowerUp = loadImage(
-    "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2FUntitled_Artwork%207.png?v=1596039811161"
-  );
-  lifePowerUp = loadImage(
-    "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2FUntitled_Artwork%206.png?v=1596039771832"
-  );
-  bombPowerUp = loadImage(
-    "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2FUntitled_Artwork%208.png?v=1596039859898"
-  );
-  bombUP = loadImage(
-    "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2Fc6ca087f-b424-487a-b793-17fa8fe655b2_upLine.png?v=1596041760170"
-  );
-  bombDOWN = loadImage(
-    "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2Fc6ca087f-b424-487a-b793-17fa8fe655b2_downLine.png?v=1596041763502"
-  );
-  bombRIGHT = loadImage(
-    "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2Fc6ca087f-b424-487a-b793-17fa8fe655b2_rightLine.png?v=1596041833732"
-  );
-  bombLEFT = loadImage(
-    "https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2Fc6ca087f-b424-487a-b793-17fa8fe655b2_leftLine%20(1).png?v=1596041882575"
-  );
-  dyingSound = loadSound(
-    "https://cdn.glitch.com/d649cbbc-e1ae-4e01-8436-8f08bba45c16%2FToxic%20Goo-SoundBible.com-392739082.mp3?v=1596125786427"
-  );
-}
+
 function setup() {
+  bgmusic.setVolume(0.2);
+  bgmusic.loop();
+  color1 = "Red";
+  color2 = "Blue";
   hitDelay = 0;
   Score = 0;
   var cnv = createCanvas(blocksize * 11 + 90, blocksize * 10);
@@ -129,7 +77,7 @@ function setup() {
       }
     }
   }
-  //start page button 
+  //start page button
   button1 = createButton("Start Page");
   button1.position(900, 675);
   button1.mousePressed(goStartScreen);
@@ -148,16 +96,58 @@ function setup() {
   startButton = new Clickable(100, 50); //Create button
   instructButton = new Clickable(100, 50);
   startScreen = true;
+  startShop = false;
+  startCredits = false;
+  chip1 = new Player1Chip(100, 100);
+  chip2 = new Player2Chip(150, 100);
 }
 function draw() {
   //shows Walls
   checkStart();
-  if (startScreen == false) {
+  checkShop();
+  checkCredits();
+  if (startScreen === false && startShop === false && startCredits === false) {
     background(133, 164, 140);
     stroke(0);
     strokeWeight(1);
-    // Restart Button
-
+    if (color1 === "Orange") {
+      player1Sprite = OrangeSprite;
+      player1SpriteDead = OrangeSpriteDead;
+    } else if (color1 === "Yellow") {
+      player1Sprite = YellowSprite;
+      player1SpriteDead = YellowSpriteDead;
+    } else if (color1 === "Red") {
+      player1Sprite = RedSprite;
+      player1SpriteDead = RedSpriteDead;
+    } else if (color1 === "Green") {
+      player1Sprite = GreenSprite;
+      player1SpriteDead = GreenSpriteDead;
+    } else if (color1 === "Blue") {
+      player1Sprite = BlueSprite;
+      player1SpriteDead = BlueSpriteDead;
+    } else if (color1 === "Purple") {
+      player1Sprite = PurpleSprite;
+      player1SpriteDead = PurpleSpriteDead;
+    }
+    if (color2 === "Orange") {
+      player2Sprite = OrangeSprite;
+      player2SpriteDead = OrangeSpriteDead;
+    } else if (color2 === "Red") {
+      player2Sprite = RedSprite;
+      player2SpriteDead = RedSpriteDead;
+    } else if (color2 === "Yellow") {
+      player2Sprite = YellowSprite;
+      player2SpriteDead = YellowSpriteDead;
+    } else if (color2 === "Green") {
+      player2Sprite = GreenSprite;
+      player2SpriteDead = GreenSpriteDead;
+    } else if (color2 === "Blue") {
+      player2Sprite = BlueSprite;
+      player2SpriteDead = BlueSpriteDead;
+    } else if (color2 === "Purple") {
+      player2Sprite = PurpleSprite;
+      player2SpriteDead = PurpleSpriteDead;
+    }
     // shows Walls
     for (let i = 0; i < Walls.length; i++) {
       Walls[i].showSelf();
@@ -201,6 +191,7 @@ function draw() {
     document.getElementById("GameOver").innerHTML = "";
   }
   hitDelay--;
+  console.log(hitDelay);
 }
 
 function keepLives() {
@@ -210,8 +201,8 @@ function keepLives() {
   for (let i = 0; i < bomber2.lives; i++) {
     image(player2Sprite, blocksize * 11 + 25, 450 - i * 30, 25, 25);
   }
-//  text("Player 1 Score is: ", width-20, 20, 50, 50);
-//  text("Player 2 Score is: ", width-20, 300, 50, 50);
+  //  text("Player 1 Score is: ", width-20, 20, 50, 50);
+  //  text("Player 2 Score is: ", width-20, 300, 50, 50);
 }
 
 function gameIsOver() {
@@ -255,8 +246,10 @@ function restart() {
   }
 }
 
-function goStartScreen(){
-  startScreen=true;  
+function goStartScreen() {
+  restart();
+  startScreen = true;
+  startCredits = false;
 }
 
 class Bombs {
@@ -279,6 +272,8 @@ class Bombs {
   explode() {
     this.exploded = true;
     bombSound.play();
+    let hitPlayer1 = false;
+    let hitPlayer2 = false;
     for (let i = 0; i < Logs.length; i++) {
       let hitLeft = collideLineRect(
         this.x - this.kaboom,
@@ -290,7 +285,7 @@ class Bombs {
         Logs[i].size,
         Logs[i].size
       );
-      let hitPlayer1 =
+      hitPlayer1 =
         collideLineRect(
           this.x - this.kaboom + 10,
           this.y,
@@ -311,7 +306,7 @@ class Bombs {
           bomber1.size,
           bomber1.size
         );
-      let hitPlayer2 =
+      hitPlayer2 =
         collideLineRect(
           this.x - this.kaboom + 10,
           this.y,
@@ -411,17 +406,29 @@ class Bombs {
           Logs.splice(i, 1);
         }
       }
-      if (hitPlayer1 && hitDelay <= 0) {
+      if (hitPlayer1 && hitPlayer2 && hitDelay <= 0) {
         bomber1.lives--;
-        hitDelay = 50;
+        bomber2.lives--;
+        hitDelay = 30;
+        if (bomber1.lives === 0) {
+          dyingSound.play();
+          bomber2.won = true;
+        } else if (bomber2.lives === 0) {
+          dyingSound.play();
+          bomber1.won = true;
+        } else if (bomber1.lives === 0 && bomber2.lives === 0) {
+          bomber2.won = true;
+        }
+      } else if (hitPlayer1 && hitDelay <= 0) {
+        bomber1.lives--;
+        hitDelay = 30;
         if (bomber1.lives === 0) {
           dyingSound.play();
           bomber2.won = true;
         }
-      }
-      if (hitPlayer2 && hitDelay <= 0) {
+      } else if (hitPlayer2 && hitDelay <= 0) {
         bomber2.lives--;
-        hitDelay = 50;
+        hitDelay = 30;
         if (bomber2.lives === 0) {
           dyingSound.play();
           bomber1.won = true;
