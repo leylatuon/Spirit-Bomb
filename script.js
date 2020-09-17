@@ -1,6 +1,6 @@
 // Name any p5.js functions we use in `global` so Glitch can recognize them.
 /* global
- *    HSB, background, color, colorMode, createCanvas, ellipse, fill, height, line, mouseX,Clickable
+ *    HSB, background, color, colorMode, createCanvas, ellipse, fill, height, line, mouseX,Clickable,image,loadImage,loadSound
  *    mouseY, noStroke, stroke, text, width, windowWidth,windowHeight, square, circle, noFill,collideLineRect,keyCode,keyIsPressed,UP_ARROW,DOWN_ARROW,LEFT_ARROW,RIGHT_ARROW,rect,collideRectRect
  */
 
@@ -18,263 +18,262 @@ let board = [
   [1, 2, 0, 1, 1, 2, 0, 2, 0, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
-
+let startCredits;
+let button;
+let gameOver = false;
 let Walls = [];
-let Bomb = [];
+let Bomb1 = [];
+let Bomb2 = [];
 let Logs = [];
 let Score;
 let blocksize = 50;
-let bombers = [];
 let collided = false;
+let bomber1;
+let bomber2;
+let bombImage;
+let bombSound;
+let player1Sprite;
+let player2Sprite;
+let logImage;
+let wallImage, hitDelay;
+let speedPowerUp;
+let lifePowerUp,
+  logSound,
+  bgMusic,
+  player2SpriteDying,
+  player2SpriteDead,
+  bombPowerUp,
+  startscreenImage,
+  player1priteDying,
+  player1SpriteDead,
+  bombUP,
+  startShop,
+  color1,
+  color2,
+  PurpleSprite,
+  PurpleSpriteDead,
+  bombDOWN;
+let bombRIGHT;
+let bombLEFT;
+let dyingSound;
 
 function setup() {
+  bgmusic.setVolume(0.5);
+  bgmusic.loop();
+  color1 = "Red";
+  color2 = "Blue";
+  hitDelay = 0;
   Score = 0;
-  var cnv = createCanvas(600, 600);
-  var x = (windowWidth - width) / 2;
+  var cnv = createCanvas(blocksize * 11 + 90, blocksize * 10);
+  cnv.parent("theGame");
 
-  cnv.position(x, y);
-
-  for (var y = 0; y < board.length; y++) {
-    for (var x = 0; x < board[y].length; x++) {
+  for (let j = 0; j < board.length; j++) {
+    for (let i = 0; i < board[j].length; i++) {
       //Draw a wall
-      if (board[y][x] === 1) {
-        Walls.push(new Wall(x * blocksize, y * blocksize));
-      } else if (board[y][x] === 2) {
-        Logs.push(new Log(x * blocksize, y * blocksize));
+      if (board[j][i] === 1) {
+        Walls.push(new Wall(i * blocksize, j * blocksize));
+      } else if (board[j][i] === 2) {
+        Logs.push(new Log(i * blocksize, j * blocksize));
       }
     }
   }
-  bombers.push(new bomberman(blocksize + 2, blocksize + 2, 40, 1));
-
-  myButton = new Clickable(100, 50); //Create button
-  myButton.locate(200, 200);
+  //start page button
+  button1 = createButton("Start Page");
+  button1.position(900, 675);
+  button1.mousePressed(goStartScreen);
+  //restart button
+  button = createButton("Restart");
+  button.position(990, 675);
+  button.mousePressed(restart);
+  console.log(Walls);
+  bomber1 = new bomberman(blocksize + 2, blocksize + 2, 30, 1);
+  bomber2 = new bomberman2(
+    9 * blocksize + 2,
+    9 * blocksize - blocksize + 2,
+    30,
+    1
+  );
+  startButton = new Clickable(100, 50); //Create button
+  instructButton = new Clickable(100, 50);
   startScreen = true;
-  myButton.onPress = function() {
-    //When myButton is presse
-    this.color = "#AAAAFF"; //Change button color
-    startScreen = false;
-  };
+  startShop = false;
+  startCredits = false;
+  chip1 = new Player1Chip(100, 100);
+  chip2 = new Player2Chip(150, 100);
 }
 function draw() {
   //shows Walls
   checkStart();
-  if (startScreen == false) {
-    background(255);
+  checkShop();
+  checkCredits();
+  if (startScreen === false && startShop === false && startCredits === false) {
+    background(133, 164, 140);
     stroke(0);
     strokeWeight(1);
+    if (color1 === "Orange") {
+      player1Sprite = OrangeSprite;
+      player1SpriteDead = OrangeSpriteDead;
+    } else if (color1 === "Yellow") {
+      player1Sprite = YellowSprite;
+      player1SpriteDead = YellowSpriteDead;
+    } else if (color1 === "Red") {
+      player1Sprite = RedSprite;
+      player1SpriteDead = RedSpriteDead;
+    } else if (color1 === "Green") {
+      player1Sprite = GreenSprite;
+      player1SpriteDead = GreenSpriteDead;
+    } else if (color1 === "Blue") {
+      player1Sprite = BlueSprite;
+      player1SpriteDead = BlueSpriteDead;
+    } else if (color1 === "Purple") {
+      player1Sprite = PurpleSprite;
+      player1SpriteDead = PurpleSpriteDead;
+    }
+    if (color2 === "Orange") {
+      player2Sprite = OrangeSprite;
+      player2SpriteDead = OrangeSpriteDead;
+    } else if (color2 === "Red") {
+      player2Sprite = RedSprite;
+      player2SpriteDead = RedSpriteDead;
+    } else if (color2 === "Yellow") {
+      player2Sprite = YellowSprite;
+      player2SpriteDead = YellowSpriteDead;
+    } else if (color2 === "Green") {
+      player2Sprite = GreenSprite;
+      player2SpriteDead = GreenSpriteDead;
+    } else if (color2 === "Blue") {
+      player2Sprite = BlueSprite;
+      player2SpriteDead = BlueSpriteDead;
+    } else if (color2 === "Purple") {
+      player2Sprite = PurpleSprite;
+      player2SpriteDead = PurpleSpriteDead;
+    }
+    // shows Walls
     for (let i = 0; i < Walls.length; i++) {
       Walls[i].showSelf();
     }
+
     //show Logs
     for (let i = 0; i < Logs.length; i++) {
       Logs[i].showSelf();
     }
-    for (let i = 0; i < bombers.length; i++) {
-      bombers[i].showSelf();
-      bombers[i].moveUp();
-      bombers[i].moveRight();
-      bombers[i].moveLeft();
-      bombers[i].moveDown();
-      bombers[i].placeBomb();
-    }
-
-    for (let i = 0; i < Bomb.length; i++) {
-      Bomb[i].showSelf();
-    }
+    gameIsOver();
+    keepLives();
+    bomber1.showSelf();
+    bomber1.moveUp();
+    bomber1.moveRight();
+    bomber1.moveLeft();
+    bomber1.moveDown();
+    bomber1.placeBomb();
+    bomber1.collectSpeedPowerup();
+    bomber2.showSelf();
+    bomber2.moveUp();
+    bomber2.moveRight();
+    bomber2.moveLeft();
+    bomber2.moveDown();
+    bomber2.placeBomb();
+    bomber2.collectSpeedPowerup();
+    bomber2.collectLifePowerup();
+    bomber1.collectLifePowerup();
+    bomber2.collectBombPowerup();
+    bomber1.collectBombPowerup();
   }
+  for (let i = 0; i < Bomb1.length; i++) {
+    Bomb1[i].showSelf();
+  }
+  for (let i = 0; i < Bomb2.length; i++) {
+    Bomb2[i].showSelf();
+  }
+  if (bomber1.lives <= 0 || bomber2.lives <= 0) {
+    gameOver = true;
+  }
+  if (gameOver === false) {
+    document.getElementById("GameOver").innerHTML = "";
+  }
+  hitDelay--;
+  console.log(hitDelay);
 }
 
-function keepScore() {
-  
+function keepLives() {
+  for (let i = 0; i < bomber1.lives; i++) {
+    image(player1Sprite, blocksize * 11 + 25, i * 30 + 25, 25, 25);
+  }
+  for (let i = 0; i < bomber2.lives; i++) {
+    image(player2Sprite, blocksize * 11 + 25, 450 - i * 30, 25, 25);
+  }
+  //  text("Player 1 Score is: ", width-20, 20, 50, 50);
+  //  text("Player 2 Score is: ", width-20, 300, 50, 50);
 }
 
-class bomberman {
-  constructor(x, y, size, walkLength) {
-    this.x = x;
-    this.y = y;
-    this.size = size;
-    this.lives = 1;
-    this.walkLength = walkLength;
-    this.toggleLeft = false;
-    this.toggleRight = false;
-    this.toggleUp = false;
-    this.toggleDown = false;
+function gameIsOver() {
+  if (gameOver === true && bomber1.won === true) {
+    document.getElementById("GameOver").innerHTML = "GAME OVER Player 1 Won ";
+    bomber1.walkLength = 0;
+    bomber2.walkLength = 0;
+  } else if (gameOver === true && bomber2.won === true) {
+    document.getElementById("GameOver").innerHTML = "GAME OVER Player 2 Won ";
+    bomber1.walkLength = 0;
+    bomber2.walkLength = 0;
+  } else if (
+    gameOver === true &&
+    bomber2.won === true &&
+    bomber1.won === true
+  ) {
+    document.getElementById("GameOver").innerHTML = "GAME OVER No One Won ";
+    bomber1.walkLength = 0;
+    bomber2.walkLength = 0;
   }
-
-  showSelf() {
-    fill(0, 70, 199);
-    rect(this.x, this.y, this.size);
-  }
-
-  moveUp() {
-    if (
-      keyIsPressed === true &&
-      this.toggleUp === false &&
-      keyCode === UP_ARROW &&
-      this.y >= 0
-    ) {
-      this.y -= this.walkLength;
-      this.toggleRight = false;
-      this.toggleDown = false;
-      this.toggleLeft = false;
-      if (this.checkWallCollison() || this.checkLogCollsion()) {
-        this.toggleUp = true;
-      }
-    }
-  }
-
-  moveDown() {
-    if (
-      keyIsPressed === true &&
-      keyCode === DOWN_ARROW &&
-      this.toggleDown === false &&
-      this.y <= height
-    ) {
-      this.toggleRight = false;
-      this.toggleUp = false;
-      this.toggleLeft = false;
-      this.y += this.walkLength;
-      if (this.checkWallCollison() || this.checkLogCollsion()) {
-        this.toggleDown = true;
-      }
-      console.log(this.toggleLeft, this.toggleUp, this.toggleDown);
-    }
-  }
-
-  moveLeft() {
-    if (
-      keyIsPressed === true &&
-      keyCode === LEFT_ARROW &&
-      this.toggleLeft === false &&
-      this.x >= 0
-    ) {
-      this.toggleRight = false;
-      this.toggleUp = false;
-      this.toggleDown = false;
-      this.x -= this.walkLength;
-      if (this.checkWallCollison() || this.checkLogCollsion()) {
-        this.toggleLeft = true;
-      }
-      console.log(this.toggleRight, this.toggleUp, this.toggleDown);
-    }
-  }
-  moveRight() {
-    if (
-      keyIsPressed === true &&
-      keyCode === RIGHT_ARROW &&
-      this.toggleRight === false &&
-      this.x <= width
-    ) {
-      this.toggleLeft = false;
-      this.toggleUp = false;
-      this.toggleDown = false;
-      this.x += this.walkLength;
-      if (this.checkWallCollison() || this.checkLogCollsion()) {
-        this.toggleRight = true;
-      }
-      console.log(this.toggleRight, this.toggleUp, this.toggleDown);
-    }
-  }
-
-  placeBomb() {
-    if (keyIsPressed === true && keyCode === 32) {
-      let newBomb = new Bombs(this.x + 20, this.y + 20);
-      Bomb.push(newBomb);
-      setTimeout(function() {
-        newBomb.explode();
-      }, 3000);
-      setTimeout(function() {
-        Bomb.pop();
-      }, 3000);
-    }
-  }
-
-  checkWallCollison() {
-    for (let i = 0; i < Walls.length; i++) {
-      let wallHit = collideRectRect(
-        this.x,
-        this.y,
-        this.size,
-        this.size,
-        Walls[i].x,
-        Walls[i].y,
-        Walls[i].size,
-        Walls[i].size
-      );
-      if (wallHit === true) {
-        console.log("true");
-        return true;
-      }
-    }
-  }
-  checkLogCollsion() {
-    for (let i = 0; i < Logs.length; i++) {
-      let logHit = collideRectRect(
-        this.x,
-        this.y,
-        this.size,
-        this.size,
-        Logs[i].x,
-        Logs[i].y,
-        Logs[i].size,
-        Logs[i].size
-      );
-      if (logHit === true) {
-        console.log("true");
-        return true;
+}
+function restart() {
+  Logs = [];
+  gameOver = false;
+  bomber1.lives = 1;
+  bomber2.lives = 1;
+  bomber1.walkLength = 1;
+  bomber2.walkLength = 1;
+  bomber1.explosionsize = blocksize;
+  bomber2.explosionsize = blocksize;
+  bomber1.x = blocksize + 2;
+  bomber1.y = blocksize + 2;
+  bomber2.x = 9 * blocksize + 2;
+  bomber2.y = 9 * blocksize - blocksize + 2;
+  for (let j = 0; j < board.length; j++) {
+    for (let i = 0; i < board[j].length; i++) {
+      if (board[j][i] === 2) {
+        Logs.push(new Log(i * blocksize, j * blocksize));
       }
     }
   }
 }
 
-class Wall {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.size = blocksize;
-  }
-  showSelf() {
-    fill(255, 204, 0); // yellow
-    square(this.x, this.y, this.size);
-    noFill();
-  }
-}
-
-class Log {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.size = blocksize;
-    this.existance = true;
-  }
-  showSelf() {
-    fill(50, 168, 82); //green
-    square(this.x, this.y, this.size);
-    noFill();
-  }
+function goStartScreen() {
+  restart();
+  startScreen = true;
+  startCredits = false;
 }
 
 class Bombs {
-  constructor(x, y) {
+  constructor(x, y, size) {
     this.x = x;
     this.y = y;
-    this.kaboom = blocksize;
+    this.kaboom = size;
     this.exploded = false;
   }
   showSelf() {
     if (this.exploded === false) {
-      circle(this.x, this.y, 30);
+      image(bombImage, this.x - 20, this.y - 20, 30, 30);
     } else if (this.exploded === true) {
-      strokeWeight(10);
-      line(this.x - this.kaboom, this.y, this.x, this.y); //left
-      line(this.x, this.y, this.x + this.kaboom, this.y); //Right
-      line(this.x, this.y - this.kaboom, this.x, this.y); //up
-      line(this.x, this.y, this.x, this.y + this.kaboom); //down
-      strokeWeight(1);
+      image(bombLEFT, this.x - this.kaboom, this.y - 7, this.kaboom, 20); //left
+      image(bombRIGHT, this.x, this.y - 7, this.kaboom, 20); //Right
+      image(bombUP, this.x - 7, this.y - this.kaboom, 20, this.kaboom); //up
+      image(bombDOWN, this.x - 7, this.y, 20, this.kaboom); //down
     }
   }
   explode() {
     this.exploded = true;
+    bombSound.play();
+    let hitPlayer1 = false;
+    let hitPlayer2 = false;
     for (let i = 0; i < Logs.length; i++) {
       let hitLeft = collideLineRect(
         this.x - this.kaboom,
@@ -286,30 +285,52 @@ class Bombs {
         Logs[i].size,
         Logs[i].size
       );
-      let hitPlayer =
+      hitPlayer1 =
         collideLineRect(
-          this.x - this.kaboom,
+          this.x - this.kaboom + 10,
           this.y,
-          this.x + this.kaboom,
+          this.x + this.kaboom - 10,
           this.y,
-          bombers[0].x,
-          bombers[0].y,
-          bombers[0].size, bombers[0].size
+          bomber1.x,
+          bomber1.y,
+          bomber1.size,
+          bomber1.size
         ) ||
         collideLineRect(
           this.x,
-          this.y - this.kaboom,
+          this.y - this.kaboom + 10,
           this.x,
-          this.y + this.kaboom,
-          bombers[0].x,
-          bombers[0].y,
-          bombers[0].size, bombers[0].size
+          this.y + this.kaboom - 10,
+          bomber1.x,
+          bomber1.y,
+          bomber1.size,
+          bomber1.size
         );
-
+      hitPlayer2 =
+        collideLineRect(
+          this.x - this.kaboom + 10,
+          this.y,
+          this.x + this.kaboom - 10,
+          this.y,
+          bomber2.x,
+          bomber2.y,
+          bomber2.size,
+          bomber2.size
+        ) ||
+        collideLineRect(
+          this.x,
+          this.y - this.kaboom + 10,
+          this.x,
+          this.y + this.kaboom - 10,
+          bomber2.x,
+          bomber2.y,
+          bomber2.size,
+          bomber2.size
+        );
       let hitRight = collideLineRect(
         this.x,
         this.y,
-        this.x + this.kaboom,
+        this.x + this.kaboom - 10,
         this.y,
         Logs[i].x,
         Logs[i].y,
@@ -318,9 +339,9 @@ class Bombs {
       );
       let hitUp = collideLineRect(
         this.x,
-        this.y - this.kaboom,
-        this.x,
         this.y,
+        this.x,
+        this.y - this.kaboom + 10,
         Logs[i].x,
         Logs[i].y,
         Logs[i].size,
@@ -330,7 +351,7 @@ class Bombs {
         this.x,
         this.y,
         this.x,
-        this.y + this.kaboom,
+        this.y + this.kaboom - 10,
         Logs[i].x,
         Logs[i].y,
         Logs[i].size,
@@ -338,28 +359,80 @@ class Bombs {
       );
 
       if (hitLeft) {
-        board[(this.x - 1, this.y)] = 0;
-        Logs.splice(i, 1);
-        console.log(Logs);
+        Logs[i].gone = true;
+        if (Logs[i].isPowerup === 1) {
+          Logs[i].showSpeedPowerup();
+        } else if (Logs[i].isPowerup === 2) {
+          Logs[i].showLifePowerup();
+        } else if (Logs[i].isPowerup === 3) {
+          Logs[i].showBombPowerup();
+        } else {
+          Logs.splice(i, 1);
+        }
       }
       if (hitRight) {
-        board[(this.x + 1, this.y)] = 0;
-        Logs.splice(i, 1);
-        console.log(Logs);
+        Logs[i].gone = true;
+        if (Logs[i].isPowerup === 1) {
+          Logs[i].showSpeedPowerup();
+        } else if (Logs[i].isPowerup === 2) {
+          Logs[i].showLifePowerup();
+        } else if (Logs[i].isPowerup === 3) {
+          Logs[i].showBombPowerup();
+        } else {
+          Logs.splice(i, 1);
+        }
       }
       if (hitUp) {
-        board[(this.x, this.y - 1)] = 0;
-        Logs.splice(i, 1);
-        console.log(Logs);
+        Logs[i].gone = true;
+        if (Logs[i].isPowerup === 1) {
+          Logs[i].showSpeedPowerup();
+        } else if (Logs[i].isPowerup === 2) {
+          Logs[i].showLifePowerup();
+        } else if (Logs[i].isPowerup === 3) {
+          Logs[i].showBombPowerup();
+        } else {
+          Logs.splice(i, 1);
+        }
       }
       if (hitDown) {
-        board[(this.x, this.y + 1)] = 0;
-        Logs.splice(i, 1);
-        console.log(Logs);
+        Logs[i].gone = true;
+        if (Logs[i].isPowerup === 1) {
+          Logs[i].showSpeedPowerup();
+        } else if (Logs[i].isPowerup === 2) {
+          Logs[i].showLifePowerup();
+        } else if (Logs[i].isPowerup === 3) {
+          Logs[i].showBombPowerup();
+        } else {
+          Logs.splice(i, 1);
+        }
       }
-      if (hitPlayer) {
-        bombers[0].lives--;
-        console.log('player hit :(')
+      if (hitPlayer1 && hitPlayer2 && hitDelay <= 0) {
+        bomber1.lives--;
+        bomber2.lives--;
+        hitDelay = 30;
+        if (bomber1.lives === 0) {
+          dyingSound.play();
+          bomber2.won = true;
+        } else if (bomber2.lives === 0) {
+          dyingSound.play();
+          bomber1.won = true;
+        } else if (bomber1.lives === 0 && bomber2.lives === 0) {
+          bomber2.won = true;
+        }
+      } else if (hitPlayer1 && hitDelay <= 0) {
+        bomber1.lives--;
+        hitDelay = 30;
+        if (bomber1.lives === 0) {
+          dyingSound.play();
+          bomber2.won = true;
+        }
+      } else if (hitPlayer2 && hitDelay <= 0) {
+        bomber2.lives--;
+        hitDelay = 30;
+        if (bomber2.lives === 0) {
+          dyingSound.play();
+          bomber1.won = true;
+        }
       }
     }
     console.log("exploded");

@@ -1,38 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Righteous"
+    />
+    <style>
+      h1 {
+        text-align: center;
+        font-family: "Righteous";
+        font-size: 350%;
+        color: #475b63;
+      }
+    </style>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <title>Hello!</title>
-    <link rel="stylesheet" href="/style.css" />
-
-<!--     import the webpage's javascript file -->
-<!--     <div id="startScreen">
-      <div>
-        <h1>BomberMan</h1>
-      </div>
-      <div>
-        <p>
-          press up arrow (<span>&uarr;</span>) to start
-        </p>
-      </div>
-    </div> -->
-<!--     import the webpage's stylesheet -->
-      <script src="startPage.js" defer></script>
+    
+   <script src="preload.js" defer></script>
+    <script src="startPage.js" defer></script>
+    <script src="shop.js" defer></script>
+    <script src="Walls.js" defer></script>
+    <script src="credits.js" defer></script>
     <script src="script.js" defer></script>
-  
+    <script src="bomberman.js" defer></script>
+    <script src="bomberman2.js" defer></script>
+   
+    
 
-  
+    <title>GAME REEEEEE</title>
+    <link rel="stylesheet" href="style.css" />
+
     <!-- import p5 things -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.dom.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.min.js"></script>
     <script src="https://cdn.JsDelivr.net/gh/bmoren/p5.collide2D/p5.collide2d.min.js"></script>
     <script src="p5.clickable.js"></script>
-    
   </head>
-  <body></body>
-</html>
+  <body>
+    <h1 class="gameName">
+      SPIRIT BOMB
+    </h1>
 
+    <p id="GameOver"></p>
+    
+    <div id="MainContainer">
+      <div id="verticalContainer">
+        <h2>
+        Instructions
+        </h2>  
+      <p id="instruct1">
+        - Choose spirit color by dragging your player chip to the color you want<br>
+        - Please dont place player chips on top of each other<br>
+        - Bomb away the fog to reveal powerups <br>
+        - Stay within the tree maze <br>
+        - Collect powerups to gain speed, bombsize, or even extra lives <br>
+        - Player 1 uses &larr;&uarr;&rarr;&darr; keys to move and space to place bomb <br>
+        - Player 2 uses WASD key to move and shift to place bombs <br>
+        
+      <h2>
+        Power Up Chart
+        </h2>  
+     <table class = "powerupChart">
+			<tr>
+				<th></th>
+				<th>Explainations</th>
+			</tr>
+
+			<tr>
+			<th class="photo"><img src="https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2FUntitled_Artwork%207.png?v=1596039811161"/></th>
+			<th class="explain">Speed Boost - Allows the player to walk faster</th>
+			</tr>
+
+			<tr>
+			<th class="photo"><img src="https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2FUntitled_Artwork%206.png?v=1596039771832"/></th>
+			<th class = "explain">Extra Life - Gives the player an extra life indicated by the number of character flames on the right side of the map
+</th>
+			</tr>
+
+			<tr>
+			<th class="photo"><span></span><img src="https://cdn.glitch.com/c6ca087f-b424-487a-b793-17fa8fe655b2%2FUntitled_Artwork%208.png?v=1596039859898"/></th>
+			<th class = "explain">Bomb Extension - Makes your bombs more powerful, explosions are more wide spread.</th>
+			</tr>
+
+       
+		</table>
+      </p>
+      
+    </div>
+      <div id="theGame"></div>
+      
+    </div>
+    
+  </body>
+</html>
